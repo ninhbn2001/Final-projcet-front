@@ -1,7 +1,6 @@
 import React from 'react';
 import './Card.scss';
 
-
 function Card(props) {
     const { card } = props;
 
