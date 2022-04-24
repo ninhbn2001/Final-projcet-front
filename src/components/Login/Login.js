@@ -16,7 +16,7 @@ const Login = () => {
 		try {
 			login();
 			localStorage.setItem("token", data);
-			window.location = "/";
+			window.location = "/dashboard";
 		} catch (error) {
 			if (
 				error.response &&

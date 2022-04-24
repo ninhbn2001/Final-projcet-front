@@ -13,6 +13,12 @@ export const fetchBoardDetails = async (id, data) => {
     return request.data
 }
 
+export const fetchAllBoard = async (data) => {
+    const request = await axios.get(`${API_ROOT}/routers/boards`, data)
+    console.log(request)
+    return request.data
+}
+
 export const createNewColumn = async (data) => {
 
     const request = await axios.post(`${API_ROOT}/routers/columns`, data)
