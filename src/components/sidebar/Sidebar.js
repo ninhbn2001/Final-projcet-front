@@ -36,17 +36,17 @@ const Sidebar = () => {
               <span>Users</span>
             </li>
           </Link>
-          <Link to="/milestone" style={{ textDecoration: "none" }}>
+          {/* <Link to="/milestone" style={{ textDecoration: "none" }}>
           <li>
             <AlarmIcon className="icon" />
             <span>Milestone</span>
           </li>
-          </Link>
+          </Link> */}
           <p className="title">USER</p>
-          <li>
+          {/* <li>
             <AccountCircleOutlinedIcon className="icon" />
             <span>Profile</span>
-          </li>
+          </li> */}
           <li  onClick={() => handleLogout()}>
             <ExitToAppIcon className="icon" />
             <span>Logout</span>

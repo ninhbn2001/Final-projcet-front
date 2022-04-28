@@ -1,7 +1,7 @@
 import "./datatable.scss";
 import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
-import { fetchAllUser, deleteUser } from 'Actions/ApiCall'
+import { fetchAllUser } from 'Actions/ApiCall'
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -9,7 +9,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-
 
 
 const Datatable = () => {
@@ -30,15 +29,6 @@ const Datatable = () => {
     console.log(12, res)
   }
 
-  const HandledeleteUser = async (id) => {
-    let check = window.confirm("You want to delete!")
-    if (check) {
-      await deleteUser(id)
-      console.log("OK")
-      getAllUser()
-    }
-  }
-
   useEffect(() => {
     getAllUser()
   }, [])
@@ -49,7 +39,7 @@ const Datatable = () => {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <div className="datatableTitle">
-            <Link to="/new" className="link">
+            <Link to="/users/new" className="link">
               Add New
             </Link>
           </div>
@@ -68,7 +58,7 @@ const Datatable = () => {
           {allUser && allUser.length > 0 && allUser.map((row, index) => {
             let id = row._id;
             let linkadd = `/boardcontent/${id}`
-            let linkviewUser = `/accounts/${id}`
+            console.log("check item: ", row)
             return (
               <TableRow key={row._id}>
                 {/* <TableCell className="tableCell">{row.id}</TableCell>
@@ -78,7 +68,7 @@ const Datatable = () => {
 
               </div>
             </TableCell> */}
-                <TableCell className="tableCell">{row.email}</TableCell>
+                <TableCell className="tableCell">{ }</TableCell>
                 {/* <TableCell className="tableCell">{row.date}</TableCell>
             <TableCell className="tableCell">{row.amount}</TableCell>
             <TableCell className="tableCell">{row.method}</TableCell> */}
@@ -87,15 +77,13 @@ const Datatable = () => {
             </TableCell> */}
                 <TableCell className="tableCell">
                   <div className="cellAction">
-                    <Link to={linkviewUser} style={{ textDecoration: "none" }}>
+                    <Link to="/accounts/test" style={{ textDecoration: "none" }}>
                       <div className="viewButton">View</div>
                     </Link>
                     <div
                       className="deleteButton"
-
                     >
-                      <button onClick={() => HandledeleteUser(row._id)}>Delete</button>
-
+                      Delete
                     </div>
                   </div>
                 </TableCell>

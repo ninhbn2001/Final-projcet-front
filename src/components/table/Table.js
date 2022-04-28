@@ -6,84 +6,53 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { fetchAllBoard } from 'Actions/ApiCall'
+import { fetchAllBoard, deleteBoard } from 'Actions/ApiCall'
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ModalBoard from 'components/Common/ModalBoard';
 
 
 const List = () => {
-  const { id } = useParams();
+  const navigate = useNavigate();
+  const [showBoardAdd, setShowBoardAdd] = useState(false)
+  const toggleShowBoardAdd = () => setShowBoardAdd(!showBoardAdd)
 
   const [allBoard, setallBoard] = useState([])
 
   const getAllBoard = async () => {
     let res = await fetchAllBoard()
     setallBoard(res)
-
+    console.log(12, res)
   }
 
   useEffect(() => {
     getAllBoard()
   }, [])
 
+  const handleView = (event) => {
+    event.preventDefault();
+    const id = event.target.value
+    navigate(`/boardcontent/${id}`, { replace: false, state: { id: id } });
+    console.log(19999, id)
+  }
+  const handleDeleteBoard = async (id) => {
+    let check = window.confirm("You want to delete!")
+    if (check) {
+      await deleteBoard(id)
+      getAllBoard()
 
+    }
+  }
 
-
-  // const rows = [
-  //   {
-  //     id: 1143155,
-  //     product: "Acer Nitro 5",
-  //     img: "https://m.media-amazon.com/images/I/81bc8mA3nKL._AC_UY327_FMwebp_QL65_.jpg",
-  //     customer: "John Smith",
-  //     date: "1 March",
-  //     amount: 785,
-  //     method: "Cash on Delivery",
-  //     status: "Approved",
-  //   },
-  //   {
-  //     id: 2235235,
-  //     product: "Playstation 5",
-  //     img: "https://m.media-amazon.com/images/I/31JaiPXYI8L._AC_UY327_FMwebp_QL65_.jpg",
-  //     customer: "Michael Doe",
-  //     date: "1 March",
-  //     amount: 900,
-  //     method: "Online Payment",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 2342353,
-  //     product: "Redragon S101",
-  //     img: "https://m.media-amazon.com/images/I/71kr3WAj1FL._AC_UY327_FMwebp_QL65_.jpg",
-  //     customer: "John Smith",
-  //     date: "1 March",
-  //     amount: 35,
-  //     method: "Cash on Delivery",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 2357741,
-  //     product: "Razer Blade 15",
-  //     img: "https://m.media-amazon.com/images/I/71wF7YDIQkL._AC_UY327_FMwebp_QL65_.jpg",
-  //     customer: "Jane Smith",
-  //     date: "1 March",
-  //     amount: 920,
-  //     method: "Online",
-  //     status: "Approved",
-  //   },
-  //   {
-  //     id: 2342355,
-  //     product: "ASUS ROG Strix",
-  //     img: "https://m.media-amazon.com/images/I/81hH5vK-MCL._AC_UY327_FMwebp_QL65_.jpg",
-  //     customer: "Harold Carol",
-  //     date: "1 March",
-  //     amount: 2000,
-  //     method: "Online",
-  //     status: "Pending",
-  //   },
-  // ];
   return (
     <TableContainer component={Paper} className="table">
+      <div className="datatableTitle">
+        <button className="link" onClick={toggleShowBoardAdd}>
+          Add New
+        </button>
+        <ModalBoard openModal={showBoardAdd} toggleShowBoardAdd={toggleShowBoardAdd} />
+      </div>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -99,10 +68,11 @@ const List = () => {
         </TableHead>
         <TableBody>
           {allBoard && allBoard.length > 0 && allBoard.map((row, index) => {
-            let id = row.id;
-            let linkadd = "/boardcontent/:id" 
+            let id = row._id;
+            let linkadd = `/boardcontent/${id}`
+            console.log(99999999, row)
             return (
-              <TableRow key={row.id}>
+              <TableRow key={row._id}>
                 {/* <TableCell className="tableCell">{row.id}</TableCell>
               <TableCell className="tableCell">
                 <div className="cellWrapper">
@@ -120,12 +90,12 @@ const List = () => {
                 <TableCell className="tableCell">
                   <div className="cellAction">
                     <Link to={linkadd} style={{ textDecoration: "none" }}>
-                      <div className="viewButton"
-                      >View</div>
+                      <button className="viewButton" value={id} onClick={handleView}
+                      >View</button>
                     </Link>
                     <div
                       className="deleteButton"
-
+                      onClick={() => handleDeleteBoard(row._id)}
                     >
                       Delete
                     </div>
@@ -137,12 +107,6 @@ const List = () => {
           })}
         </TableBody>
       </Table>
-      {allBoard.map((item, index) => {
-        console.log("check")
-        return (
-          <div>{ }</div>
-        )
-      })}
     </TableContainer>
   );
 };

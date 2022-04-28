@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { isEmpty, cloneDeep } from 'lodash';
 import './BoardContent.scss';
 import { Container as BootstrapContainer, Row, Col, Form, Button } from 'react-bootstrap';
-import {useParams} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Container, Draggable } from 'react-smooth-dnd';
 import Column from 'components/Column/Column';
 import { mapOrder } from 'utilities/sorts'
 import { applyDrag } from 'utilities/dragDrop'
-import { fetchBoardDetails, createNewColumn, updateBoard, updateColumn, updateCard, fetchAllBoard } from 'Actions/ApiCall'
+import { fetchBoardDetails, createNewColumn, updateBoard, updateColumn, updateCard } from 'Actions/ApiCall'
+import { Link } from "react-router-dom";
+import AlarmIcon from '@mui/icons-material/Alarm';
 
 function BoardContent() {
   const [board, setBoard] = useState({})
@@ -20,8 +22,7 @@ function BoardContent() {
 
   const onNewColumnTitleChange = (e) => setNewColumnTitle(e.target.value)
 
-
-  const { id } = useParams();
+  const { id } = useParams()
 
   useEffect(() => {
     const boardId = id
@@ -138,11 +139,22 @@ function BoardContent() {
     setBoard(newBoard)
   }
 
-
+  let linkMistone = "/milestone/" + id
 
 
   return (
+
     <div className="board-content">
+      <nav className="navbar-board">BoardBar
+        <Link to={linkMistone} style={{ textDecoration: "none" }}>
+          <span className="milestone-button">
+            <AlarmIcon className="icon" />
+            Milestone
+          </span>
+        </Link>
+      </nav>
+      
+      <div className="right-content">
       <Container
         orientation="horizontal"
         onDrop={onColumnDrop}
@@ -159,29 +171,30 @@ function BoardContent() {
             <Column column={column} onCardDrop={onCardDrop} onUpdateColumnState={onUpdateColumnState} />
           </Draggable>
         ))}
+
+        <BootstrapContainer className="project-management-content">
+          {!openNewColumnForm &&
+            <Row>
+              <Col className="add-new-column" onClick={toggleOpenNewColumnForm}>
+                <i className="fa fa-plus icon" />Add another column
+              </Col>
+            </Row>
+          }
+
+          {openNewColumnForm &&
+            <Row>
+              <Col className="enter-new-column">
+                <Form.Control size="small" type="text" placeholder="Enter title of new column" className="input-enter-new-column"
+                  ref={newColumnInputRef} value={newColumnTitle} onChange={onNewColumnTitleChange} onKeyDown={event => (event.key === 'Enter') && addNewColumn()}
+                />
+                <Button variant="contained" color="error" size="large" onClick={addNewColumn}>Add column</Button>
+                <span className="cancel-icon" onClick={toggleOpenNewColumnForm}><i className="fa fa-trash icon" /></span>
+              </Col>
+            </Row>
+          }
+        </BootstrapContainer>
       </Container>
-
-      <BootstrapContainer className="project-management-content">
-        {!openNewColumnForm &&
-          <Row>
-            <Col className="add-new-column" onClick={toggleOpenNewColumnForm}>
-              <i className="fa fa-plus icon" />Add another column
-            </Col>
-          </Row>
-        }
-
-        {openNewColumnForm &&
-          <Row>
-            <Col className="enter-new-column">
-              <Form.Control size="small" type="text" placeholder="Enter title of new column" className="input-enter-new-column"
-                ref={newColumnInputRef} value={newColumnTitle} onChange={onNewColumnTitleChange} onKeyDown={event => (event.key === 'Enter') && addNewColumn()}
-              />
-              <Button variant="success" size="small" onClick={addNewColumn}>Add column</Button>
-              <span className="cancel-icon" onClick={toggleOpenNewColumnForm}><i className="fa fa-trash icon" /></span>
-            </Col>
-          </Row>
-        }
-      </BootstrapContainer>
+      </div>
     </div>
   )
 }

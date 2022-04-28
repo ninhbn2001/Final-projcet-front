@@ -117,15 +117,6 @@ function Column(props) {
                 </header> 
                 <div className="card-list">
                 <Container
-                    
-                    // onDragStart={e => console.log("drag started", e)}
-                    // onDragEnd={e => console.log("drag end", e)}
-                     // onDragEnter={() => {
-                    //   console.log("drag enter:", column.id);
-                    // }}
-                    // onDragLeave={() => {
-                    //   console.log("drag leave:", column.id);
-                    // }}
                     groupName="col"
                     onDrop={dropResult => onCardDrop(column._id, dropResult)}
                     getChildPayload={index => cards[index]}
